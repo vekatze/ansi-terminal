@@ -1,0 +1,21 @@
+import {
+  this.color {Blue, Red, set-foreground-color},
+  this.style {Bold, Normal, set-style},
+}
+
+define main(): unit {
+  Unit
+}
+
+define zen(): unit {
+  set-foreground-color(Red);
+  set-style(Bold);
+  print("error: ");
+  set-style(Normal);
+  print("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n");
+  set-foreground-color(Blue);
+  set-style(Bold);
+  print("hint: ");
+  set-style(Normal);
+  print("くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき。\n")
+}

@@ -1,0 +1,52 @@
+import {
+  core.int.text {show},
+  core.text {format},
+}
+
+data cursor-movement {
+| Up(int)
+| Down(int)
+| Right(int)
+| Left(int)
+| Down-Head(int)
+| Up-Head(int)
+| From-Left(int)
+| From-Up-Right(from-up: int, from-right: int)
+}
+
+define _get-tag(c: cursor-movement): text {
+  let template = "\27[{}{}" in
+  let formatter =
+    function (i: int, tag: &text) {
+      let i' = show(i) in
+      format(template, [i', *tag])
+    }
+  in
+  match c {
+  | Up(i) =>
+    formatter(i, "A")
+  | Down(i) =>
+    formatter(i, "B")
+  | Right(i) =>
+    formatter(i, "C")
+  | Left(i) =>
+    formatter(i, "D")
+  | Up-Head(i) =>
+    formatter(i, "E")
+  | Down-Head(i) =>
+    formatter(i, "F")
+  | From-Left(i) =>
+    formatter(i, "G")
+  | From-Up-Right(i, j) =>
+    let i' = show(i) in
+    let j' = show(j) in
+    format("\27[{};{}", [i', j', *"H"])
+  }
+}
+
+define move-cursor(c: cursor-movement): unit {
+  let t = _get-tag(c) in
+  let _ on t = print(t) in
+  let _ = t in
+  Unit
+}

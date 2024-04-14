@@ -1,0 +1,68 @@
+import {
+  core.int.text {show},
+  core.text {format},
+}
+
+data color {
+| Black
+| Red
+| Green
+| Yellow
+| Blue
+| Magenta
+| Cyan
+| White
+}
+
+define _get-color-code(c: color): int {
+  match c {
+  | Black =>
+    0
+  | Red =>
+    1
+  | Green =>
+    2
+  | Yellow =>
+    3
+  | Blue =>
+    4
+  | Magenta =>
+    5
+  | Cyan =>
+    6
+  | White =>
+    7
+  }
+}
+
+define _get-foreground-tag(c: color): text {
+  let color-code = _get-color-code(c) in
+  format("\27[{}m", [show(add-int(30, color-code))])
+}
+
+define _get-background-tag(c: color): text {
+  let color-code = _get-color-code(c) in
+  format("\27[{}m", [show(add-int(40, color-code))])
+}
+
+define set-foreground-color(c: color): unit {
+  let tag = _get-foreground-tag(c) in
+  let _ on tag = print(tag) in
+  let _ = tag in
+  Unit
+}
+
+define set-background-color(c: color): unit {
+  let tag = _get-background-tag(c) in
+  let _ on tag = print(tag) in
+  let _ = tag in
+  Unit
+}
+
+define zen(): unit {
+  set-foreground-color(Red);
+  set-background-color(White);
+  print("hello, \n");
+  set-foreground-color(White);
+  print("world!\n")
+}

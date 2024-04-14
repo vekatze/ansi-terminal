@@ -1,0 +1,54 @@
+import {
+  core.int.text {show},
+  core.text {format},
+}
+
+data style {
+| Normal
+| Bold
+| Dim
+| Italic
+| Underlined
+| Blinking
+| Fast-Blinking
+| Reversed
+| Invisible
+| Strike-Through
+}
+
+define _get-code(s: style): int {
+  match s {
+  | Normal =>
+    0
+  | Bold =>
+    1
+  | Dim =>
+    2
+  | Italic =>
+    3
+  | Underlined =>
+    4
+  | Blinking =>
+    5
+  | Fast-Blinking =>
+    6
+  | Reversed =>
+    7
+  | Invisible =>
+    8
+  | Strike-Through =>
+    9
+  }
+}
+
+define _get-tag(s: style): text {
+  let code = _get-code(s) in
+  format("\27[{}m", [show(code)])
+}
+
+define set-style(s: style): unit {
+  let tag = _get-tag(s) in
+  let _ on tag = print(tag) in
+  let _ = tag in
+  Unit
+}
