@@ -1,5 +1,4 @@
 import {
-  core.int.text {show},
   core.text {format},
 }
 
@@ -18,7 +17,7 @@ define _get-tag(c: cursor-movement): text {
   let template = "\27[{}{}" in
   let formatter =
     function (i: int, tag: &text) {
-      let i' = show(i) in
+      let i' = %ld(i) in
       format(template, [i', *tag])
     }
   in
@@ -38,9 +37,7 @@ define _get-tag(c: cursor-movement): text {
   | From-Left(i) =>
     formatter(i, "G")
   | From-Up-Right(i, j) =>
-    let i' = show(i) in
-    let j' = show(j) in
-    format("\27[{};{}", [i', j', *"H"])
+    format("\27[{};{}", [%ld(i), %ld(j), *"H"])
   }
 }
 

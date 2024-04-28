@@ -1,5 +1,4 @@
 import {
-  core.int.text {show},
   core.text {format},
 }
 
@@ -37,12 +36,12 @@ define _get-color-code(c: color): int {
 
 define _get-foreground-tag(c: color): text {
   let color-code = _get-color-code(c) in
-  format("\27[{}m", [show(add-int(30, color-code))])
+  format("\27[{}m", [%ld(add-int(30, color-code))])
 }
 
 define _get-background-tag(c: color): text {
   let color-code = _get-color-code(c) in
-  format("\27[{}m", [show(add-int(40, color-code))])
+  format("\27[{}m", [%ld(add-int(40, color-code))])
 }
 
 define set-foreground-color(c: color): unit {
