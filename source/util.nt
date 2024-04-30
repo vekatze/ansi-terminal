@@ -1,0 +1,17 @@
+import {
+  this.color {color, get-foreground-tag, set-foreground-color},
+  this.style {Normal, set-style},
+}
+
+define paint(fg: color, t: &text): text {
+  let fg-tag = get-foreground-tag(fg) in
+  let result on fg-tag = core.text.append(fg-tag, t) in
+  let _ = fg-tag in
+  result
+}
+
+define render(fg: color, t: &text): unit {
+  set-foreground-color(fg);
+  print(t);
+  set-style(Normal)
+}
