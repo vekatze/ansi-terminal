@@ -42,7 +42,7 @@ define _get-code(s: style): int {
 
 define _get-tag(s: style): text {
   let code = _get-code(s) in
-  format("\27[{}m", [%ld(code)])
+  format("\u{1b}[{}m", [%ld(code)])
 }
 
 define set-style(s: style): unit {

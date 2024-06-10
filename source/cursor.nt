@@ -3,18 +3,18 @@ import {
 }
 
 data cursor-movement {
-| Up(int)
-| Down(int)
-| Right(int)
-| Left(int)
-| Down-Head(int)
-| Up-Head(int)
-| From-Left(int)
-| From-Up-Right(from-up: int, from-right: int)
+| Cursor-Up(int)
+| Cursor-Down(int)
+| Cursor-Right(int)
+| Cursor-Left(int)
+| Cursor-Down-Head(int)
+| Cursor-Up-Head(int)
+| Cursor-From-Left(int)
+| Cursor-From-Up-Right(from-up: int, from-right: int)
 }
 
 define _get-tag(c: cursor-movement): text {
-  let template = "\27[{}{}" in
+  let template = "\u{1b}[{}{}" in
   let formatter =
     function (i: int, tag: &text) {
       let i' = %ld(i) in
@@ -22,22 +22,22 @@ define _get-tag(c: cursor-movement): text {
     }
   in
   match c {
-  | Up(i) =>
+  | Cursor-Up(i) =>
     formatter(i, "A")
-  | Down(i) =>
+  | Cursor-Down(i) =>
     formatter(i, "B")
-  | Right(i) =>
+  | Cursor-Right(i) =>
     formatter(i, "C")
-  | Left(i) =>
+  | Cursor-Left(i) =>
     formatter(i, "D")
-  | Up-Head(i) =>
+  | Cursor-Up-Head(i) =>
     formatter(i, "E")
-  | Down-Head(i) =>
+  | Cursor-Down-Head(i) =>
     formatter(i, "F")
-  | From-Left(i) =>
+  | Cursor-From-Left(i) =>
     formatter(i, "G")
-  | From-Up-Right(i, j) =>
-    format("\27[{};{}", [%ld(i), %ld(j), *"H"])
+  | Cursor-From-Up-Right(i, j) =>
+    format("\u{1b}[{};{}", [%ld(i), %ld(j), *"H"])
   }
 }
 
