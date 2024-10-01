@@ -1,4 +1,5 @@
 import {
+  core.int.show {show-int},
   core.text {format},
 }
 
@@ -17,7 +18,7 @@ define _get-tag(c: cursor-movement): text {
   let template = "\u{1b}[{}{}" in
   let formatter =
     function (i: int, tag: &text) {
-      let i' = %ld(i) in
+      let i' = show-int(i) in
       format(template, [i', *tag])
     }
   in
@@ -37,7 +38,7 @@ define _get-tag(c: cursor-movement): text {
   | Cursor-From-Left(i) =>
     formatter(i, "G")
   | Cursor-From-Up-Right(i, j) =>
-    format("\u{1b}[{};{}", [%ld(i), %ld(j), *"H"])
+    format("\u{1b}[{};{}", [show-int(i), show-int(j), *"H"])
   }
 }
 

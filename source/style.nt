@@ -1,4 +1,5 @@
 import {
+  core.int.show {show-int},
   core.text {format},
 }
 
@@ -42,7 +43,7 @@ define _get-code(s: style): int {
 
 define _get-tag(s: style): text {
   let code = _get-code(s) in
-  format("\u{1b}[{}m", [%ld(code)])
+  format("\u{1b}[{}m", [show-int(code)])
 }
 
 define set-style(s: style): unit {
