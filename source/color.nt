@@ -14,7 +14,7 @@ data color {
 | White
 }
 
-define get-color-code(c: color): int {
+define _get-color-code(c: color): int {
   match c {
   | Black =>
     0
@@ -36,12 +36,12 @@ define get-color-code(c: color): int {
 }
 
 define get-foreground-tag(c: color): text {
-  let color-code = get-color-code(c) in
+  let color-code = _get-color-code(c) in
   format("\u{1b}[{}m", [show-int(add-int(30, color-code))])
 }
 
 define get-background-tag(c: color): text {
-  let color-code = get-color-code(c) in
+  let color-code = _get-color-code(c) in
   format("\u{1b}[{}m", [show-int(add-int(40, color-code))])
 }
 
