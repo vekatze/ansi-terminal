@@ -17,5 +17,5 @@ define zen(): unit {
   set-style(Bold);
   print("hint: ");
   set-style(Normal);
-  print("くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき。\n")
+  print("くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき\n")
 }

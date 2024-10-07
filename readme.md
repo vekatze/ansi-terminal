@@ -46,6 +46,6 @@ define some-func(): unit {
   print("hint: ");
   // prints "くらきより.." in plain text
   set-style(Normal);
-  print("くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき。\n")
+  print("くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき\n")
 }
 ```
