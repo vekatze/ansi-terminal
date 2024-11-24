@@ -3,10 +3,6 @@ import {
   this.style {Bold, Normal, set-style},
 }
 
-define main(): unit {
-  Unit
-}
-
 define zen(): unit {
   set-foreground-color(Red);
   set-style(Bold);
@@ -18,4 +14,8 @@ define zen(): unit {
   print("hint: ");
   set-style(Normal);
   print("くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき\n")
+}
+
+define main(): unit {
+  zen()
 }
