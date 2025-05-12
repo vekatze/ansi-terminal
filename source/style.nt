@@ -41,13 +41,13 @@ define _get-code(s: style): int {
   }
 }
 
-define _get-tag(s: style): text {
+define get-tag(s: style): text {
   let code = _get-code(s) in
   format("\u{1b}[{}m", [show-int(code)])
 }
 
 define set-style(s: style): unit {
-  let tag = _get-tag(s) in
+  let tag = get-tag(s) in
   let _ on tag = print(tag) in
   let _ = tag in
   Unit
