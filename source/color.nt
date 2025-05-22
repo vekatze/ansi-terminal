@@ -40,13 +40,30 @@ define get-foreground-tag(c: color): text {
   format("\u{1b}[{}m", [show-int(add-int(30, color-code))])
 }
 
+define get-intense-foreground-tag(c: color): text {
+  let color-code = _get-color-code(c) in
+  format("\u{1b}[{}m", [show-int(add-int(90, color-code))])
+}
+
 define get-background-tag(c: color): text {
   let color-code = _get-color-code(c) in
   format("\u{1b}[{}m", [show-int(add-int(40, color-code))])
 }
 
+define get-intense-background-tag(c: color): text {
+  let color-code = _get-color-code(c) in
+  format("\u{1b}[{}m", [show-int(add-int(100, color-code))])
+}
+
 define set-foreground-color(c: color): unit {
   let tag = get-foreground-tag(c) in
+  let _ on tag = print(tag) in
+  let _ = tag in
+  Unit
+}
+
+define set-intense-foreground-color(c: color): unit {
+  let tag = get-intense-foreground-tag(c) in
   let _ on tag = print(tag) in
   let _ = tag in
   Unit
@@ -59,8 +76,15 @@ define set-background-color(c: color): unit {
   Unit
 }
 
+define set-intense-background-color(c: color): unit {
+  let tag = get-intense-background-tag(c) in
+  let _ on tag = print(tag) in
+  let _ = tag in
+  Unit
+}
+
 define zen(): unit {
-  set-foreground-color(Red);
+  set-intense-foreground-color(Black);
   set-background-color(White);
   print("hello, \n");
   set-foreground-color(White);
