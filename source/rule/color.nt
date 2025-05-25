@@ -19,8 +19,3 @@ data color {
 | Color-256(int8)
 | Color-RGB(int8, int8, int8)
 }
-
-data color-layer {
-| Foreground
-| Background
-}

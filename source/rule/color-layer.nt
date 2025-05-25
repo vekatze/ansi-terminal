@@ -1,0 +1,4 @@
+data color-layer {
+| Foreground
+| Background
+}

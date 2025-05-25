@@ -1,5 +1,6 @@
 import {
-  this.rule.color {color, color-layer},
+  this.rule.color {color},
+  this.rule.color-layer {color-layer},
 }
 
 data style {

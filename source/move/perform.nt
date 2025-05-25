@@ -6,7 +6,6 @@ import {
   this.move.make-ansi-kit {make-ansi-kit},
   this.rule.ansi-kit {ansi-kit},
   this.rule.color {
-    Background,
     Black,
     Blue,
     Color-256,
@@ -14,7 +13,6 @@ import {
     Color-RGB,
     Cyan,
     Dull,
-    Foreground,
     Green,
     Magenta,
     Red,
@@ -22,6 +20,7 @@ import {
     White,
     Yellow,
   },
+  this.rule.color-layer {Background, Foreground},
   this.rule.command {Erase, Move-Cursor, Set-Style, command},
   this.rule.cursor-movement {Backward, Down, Down-Start, Forward, To, To-Column, Up, Up-Start},
   this.rule.space {Line, Screen},
