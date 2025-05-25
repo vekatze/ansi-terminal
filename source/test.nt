@@ -1,18 +1,23 @@
 import {
-  this.color {Blue, Red, set-foreground-color},
-  this.style {Bold, Normal, set-style},
+  core.file.descriptor {stdout},
+  this.move.make-ansi-kit {make-ansi-kit},
+  this.move.perform {perform},
+  this.rule.color {Blue, Color-ANSI, Foreground, Red, Vivid},
+  this.rule.command {Set-Style},
+  this.rule.style {Bold, Color, Normal},
 }
 
 define zen(): unit {
-  set-foreground-color(Red);
-  set-style(Bold);
+  pin k = make-ansi-kit(stdout) in
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Red))));
+  perform(k, Set-Style(Bold));
   print("error: ");
-  set-style(Normal);
+  perform(k, Set-Style(Normal));
   print("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n");
-  set-foreground-color(Blue);
-  set-style(Bold);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Blue))));
+  perform(k, Set-Style(Bold));
   print("hint: ");
-  set-style(Normal);
+  perform(k, Set-Style(Normal));
   print("くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき\n")
 }
 

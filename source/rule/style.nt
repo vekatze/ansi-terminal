@@ -1,0 +1,12 @@
+import {
+  this.rule.color {color, color-layer},
+}
+
+data style {
+| Normal
+| Bold
+| Faint
+| Italic
+| Underline
+| Color(color-layer, color)
+}

@@ -1,0 +1,16 @@
+import {
+  this.rule.cursor-movement {cursor-movement},
+  this.rule.space {space},
+  this.rule.span {span},
+  this.rule.style {style},
+}
+
+data command {
+| Set-Style(style)
+| Move-Cursor(cursor-movement)
+| Erase(space, span)
+  // | Set-Title(&text)
+  // | Set-Hyperlink(&text, &text)
+  // | Copy-To-Clipboard(&text)
+  // | Perform-Raw-Command(&text)
+}

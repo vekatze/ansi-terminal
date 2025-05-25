@@ -1,0 +1,9 @@
+import {
+  core.file.descriptor {descriptor},
+}
+
+data ansi-kit {
+| _ANSI-Kit(
+    sink: descriptor,
+  )
+}

@@ -1,0 +1,5 @@
+data span {
+| From-Cursor
+| To-Cursor
+| Whole
+}

@@ -1,0 +1,10 @@
+data cursor-movement {
+| Up(int)
+| Down(int)
+| Forward(int)
+| Backward(int)
+| Up-Start(int)
+| Down-Start(int)
+| To-Column(int)
+| To(int, int)
+}

@@ -1,0 +1,8 @@
+import {
+  core.file.descriptor {descriptor},
+  this.rule.ansi-kit {_ANSI-Kit, ansi-kit},
+}
+
+define make-ansi-kit(sink: descriptor): ansi-kit {
+  _ANSI-Kit of {sink}
+}

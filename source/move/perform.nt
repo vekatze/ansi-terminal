@@ -1,0 +1,318 @@
+import {
+  core.binary {binary},
+  core.file.descriptor {stdout},
+  core.int.show {show-int, show-uint},
+  core.text {_Text},
+  this.move.make-ansi-kit {make-ansi-kit},
+  this.rule.ansi-kit {ansi-kit},
+  this.rule.color {
+    Background,
+    Black,
+    Blue,
+    Color-256,
+    Color-ANSI,
+    Color-RGB,
+    Cyan,
+    Dull,
+    Foreground,
+    Green,
+    Magenta,
+    Red,
+    Vivid,
+    White,
+    Yellow,
+  },
+  this.rule.command {Erase, Move-Cursor, Set-Style, command},
+  this.rule.cursor-movement {Backward, Down, Down-Start, Forward, To, To-Column, Up, Up-Start},
+  this.rule.space {Line, Screen},
+  this.rule.span {From-Cursor, To-Cursor, Whole},
+  this.rule.style {Bold, Color, Faint, Italic, Normal, Underline},
+}
+
+inline _to-binary(x: &text): &binary {
+  tie _Text(content) = x in
+  content
+}
+
+inline perform(k: &ansi-kit, c: command): unit {
+  let _ = k in
+  match c {
+  | Set-Style(style) =>
+    match style {
+    | Normal =>
+      print("\u{1b}[0m")
+    | Bold =>
+      print("\u{1b}[1m")
+    | Faint =>
+      print("\u{1b}[2m")
+    | Italic =>
+      print("\u{1b}[3m")
+    | Underline =>
+      print("\u{1b}[4m")
+    | Color(color-layer, color) =>
+      match color-layer {
+      | Foreground =>
+        match color {
+        | Color-ANSI(color-intensity, color) =>
+          match color-intensity {
+          | Dull =>
+            match color {
+            | Black =>
+              print("\u{1b}[30m")
+            | Red =>
+              print("\u{1b}[31m")
+            | Green =>
+              print("\u{1b}[32m")
+            | Yellow =>
+              print("\u{1b}[33m")
+            | Blue =>
+              print("\u{1b}[34m")
+            | Magenta =>
+              print("\u{1b}[35m")
+            | Cyan =>
+              print("\u{1b}[36m")
+            | White =>
+              print("\u{1b}[37m")
+            }
+          | Vivid =>
+            match color {
+            | Black =>
+              print("\u{1b}[90m")
+            | Red =>
+              print("\u{1b}[91m")
+            | Green =>
+              print("\u{1b}[92m")
+            | Yellow =>
+              print("\u{1b}[93m")
+            | Blue =>
+              print("\u{1b}[94m")
+            | Magenta =>
+              print("\u{1b}[95m")
+            | Cyan =>
+              print("\u{1b}[96m")
+            | White =>
+              print("\u{1b}[97m")
+            }
+          }
+        | Color-256(value) =>
+          printf("\u{1b}[38;5;{}m]", [show-uint(zext-int8-int(value))])
+        | Color-RGB(r, g, b) =>
+          printf("\u{1b}[38;2;{};{};{}m]", [
+            show-uint(zext-int8-int(r)),
+            show-uint(zext-int8-int(g)),
+            show-uint(zext-int8-int(b)),
+          ])
+        }
+      | Background =>
+        match color {
+        | Color-ANSI(color-intensity, color) =>
+          match color-intensity {
+          | Dull =>
+            match color {
+            | Black =>
+              print("\u{1b}[40m")
+            | Red =>
+              print("\u{1b}[41m")
+            | Green =>
+              print("\u{1b}[42m")
+            | Yellow =>
+              print("\u{1b}[43m")
+            | Blue =>
+              print("\u{1b}[44m")
+            | Magenta =>
+              print("\u{1b}[45m")
+            | Cyan =>
+              print("\u{1b}[46m")
+            | White =>
+              print("\u{1b}[47m")
+            }
+          | Vivid =>
+            match color {
+            | Black =>
+              print("\u{1b}[100m")
+            | Red =>
+              print("\u{1b}[101m")
+            | Green =>
+              print("\u{1b}[102m")
+            | Yellow =>
+              print("\u{1b}[103m")
+            | Blue =>
+              print("\u{1b}[104m")
+            | Magenta =>
+              print("\u{1b}[105m")
+            | Cyan =>
+              print("\u{1b}[106m")
+            | White =>
+              print("\u{1b}[107m")
+            }
+          }
+        | Color-256(value) =>
+          printf("\u{1b}[48;5;{}m]", [show-uint(zext-int8-int(value))])
+        | Color-RGB(r, g, b) =>
+          printf("\u{1b}[48;2;{};{};{}m]", [
+            show-uint(zext-int8-int(r)),
+            show-uint(zext-int8-int(g)),
+            show-uint(zext-int8-int(b)),
+          ])
+        }
+      }
+    }
+  | Move-Cursor(movement) =>
+    match movement {
+    | Up(offset) =>
+      printf("\u{1b}[{}A", [show-int(offset)])
+    | Down(offset) =>
+      printf("\u{1b}[{}B", [show-int(offset)])
+    | Forward(offset) =>
+      printf("\u{1b}[{}C", [show-int(offset)])
+    | Backward(offset) =>
+      printf("\u{1b}[{}D", [show-int(offset)])
+    | Up-Start(offset) =>
+      printf("\u{1b}[{}E", [show-int(offset)])
+    | Down-Start(offset) =>
+      printf("\u{1b}[{}F", [show-int(offset)])
+    | To-Column(column) =>
+      printf("\u{1b}[{}G", [show-int(column)])
+    | To(x, y) =>
+      printf("\u{1b}[{};{}H", [show-int(x), show-int(y)])
+    }
+  | Erase(space, span) =>
+    match space {
+    | Line =>
+      match span {
+      | From-Cursor =>
+        print("\u{1b}[0K")
+      | To-Cursor =>
+        print("\u{1b}[1K")
+      | Whole =>
+        print("\u{1b}[2K")
+      }
+    | Screen =>
+      match span {
+      | From-Cursor =>
+        print("\u{1b}[0J")
+      | To-Cursor =>
+        print("\u{1b}[1J")
+      | Whole =>
+        print("\u{1b}[2J")
+      }
+    }
+  }
+}
+
+define _test-print(k: &ansi-kit): unit {
+  print("XX");
+  perform(k, Set-Style(Normal));
+  print(" ")
+}
+
+define _test-color-foreground-dull(k: &ansi-kit): unit {
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Black))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Red))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Green))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Yellow))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Blue))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Magenta))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Cyan))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, White))));
+  _test-print(k)
+}
+
+define _test-color-background-dull(k: &ansi-kit): unit {
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Black))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Red))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Green))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Yellow))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Blue))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Magenta))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Cyan))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, White))));
+  _test-print(k)
+}
+
+define _test-color-foreground-vivid(k: &ansi-kit): unit {
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Black))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Red))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Green))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Yellow))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Blue))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Magenta))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Cyan))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, White))));
+  _test-print(k)
+}
+
+define _test-color-background-vivid(k: &ansi-kit): unit {
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Black))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Red))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Green))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Yellow))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Blue))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Magenta))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Cyan))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, White))));
+  _test-print(k)
+}
+
+define zen(): unit {
+  pin k = make-ansi-kit of {sink = stdout} in
+  perform(k, Set-Style(Normal));
+  _test-print(k);
+  perform(k, Set-Style(Bold));
+  _test-print(k);
+  perform(k, Set-Style(Faint));
+  _test-print(k);
+  perform(k, Set-Style(Italic));
+  _test-print(k);
+  perform(k, Set-Style(Underline));
+  _test-print(k);
+  print("\n");
+  _test-color-foreground-dull(k);
+  print("\n");
+  _test-color-background-dull(k);
+  print("\n");
+  _test-color-foreground-vivid(k);
+  print("\n");
+  _test-color-background-vivid(k);
+  print("\n");
+  print("123456789");
+  perform(k, Erase(Line, Whole));
+  perform(k, Move-Cursor(To-Column(0)));
+  print("123456789");
+  perform(k, Move-Cursor(Backward(5)));
+  perform(k, Erase(Line, From-Cursor));
+  print("\n");
+  print("123456789");
+  perform(k, Move-Cursor(Backward(5)));
+  perform(k, Erase(Line, To-Cursor));
+  print("\n");
+  Unit
+}
