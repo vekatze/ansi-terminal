@@ -2,26 +2,142 @@ import {
   core.file.descriptor {stdout},
   this.move.make-ansi-kit {make-ansi-kit},
   this.move.perform {perform},
+  this.rule.ansi-kit {ansi-kit},
   this.rule.color {Color-ANSI},
-  this.rule.color-ansi {Blue, Red},
-  this.rule.color-intensity {Vivid},
-  this.rule.color-layer {Foreground},
-  this.rule.command {Set-Style},
-  this.rule.style {Bold, Color, Normal},
+  this.rule.color-ansi {
+    Black,
+    Blue,
+    Cyan,
+    Green,
+    Magenta,
+    Red,
+    White,
+    Yellow,
+  },
+  this.rule.color-intensity {Dull, Vivid},
+  this.rule.color-layer {Background, Foreground},
+  this.rule.command {Erase, Move-Cursor, Set-Style},
+  this.rule.cursor-movement {Backward, To-Column},
+  this.rule.space {Line},
+  this.rule.span {From-Cursor, To-Cursor, Whole},
+  this.rule.style {Bold, Color, Faint, Italic, Normal, Underline},
+}
+
+define _test-print(k: &ansi-kit): unit {
+  print("XX");
+  perform(k, Set-Style(Normal));
+  print(" ")
+}
+
+define _test-color-foreground-dull(k: &ansi-kit): unit {
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Black))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Red))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Green))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Yellow))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Blue))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Magenta))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Cyan))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, White))));
+  _test-print(k)
+}
+
+define _test-color-background-dull(k: &ansi-kit): unit {
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Black))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Red))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Green))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Yellow))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Blue))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Magenta))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Cyan))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, White))));
+  _test-print(k)
+}
+
+define _test-color-foreground-vivid(k: &ansi-kit): unit {
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Black))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Red))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Green))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Yellow))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Blue))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Magenta))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Cyan))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, White))));
+  _test-print(k)
+}
+
+define _test-color-background-vivid(k: &ansi-kit): unit {
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Black))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Red))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Green))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Yellow))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Blue))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Magenta))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Cyan))));
+  _test-print(k);
+  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, White))));
+  _test-print(k)
 }
 
 define zen(): unit {
-  pin k = make-ansi-kit(stdout) in
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Red))));
-  perform(k, Set-Style(Bold));
-  print("error: ");
+  pin k = make-ansi-kit of {sink = stdout} in
   perform(k, Set-Style(Normal));
-  print("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n");
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Blue))));
+  _test-print(k);
   perform(k, Set-Style(Bold));
-  print("hint: ");
-  perform(k, Set-Style(Normal));
-  print("くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき\n")
+  _test-print(k);
+  perform(k, Set-Style(Faint));
+  _test-print(k);
+  perform(k, Set-Style(Italic));
+  _test-print(k);
+  perform(k, Set-Style(Underline));
+  _test-print(k);
+  print("\n");
+  _test-color-foreground-dull(k);
+  print("\n");
+  _test-color-background-dull(k);
+  print("\n");
+  _test-color-foreground-vivid(k);
+  print("\n");
+  _test-color-background-vivid(k);
+  print("\n");
+  print("123456789");
+  perform(k, Erase(Line, Whole));
+  perform(k, Move-Cursor(To-Column(0)));
+  print("123456789");
+  perform(k, Move-Cursor(Backward(5)));
+  perform(k, Erase(Line, From-Cursor));
+  print("\n");
+  print("123456789");
+  perform(k, Move-Cursor(Backward(5)));
+  perform(k, Erase(Line, To-Cursor));
+  print("\n");
+  Unit
 }
 
 define main(): unit {
