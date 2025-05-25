@@ -1,3 +1,7 @@
+import {
+  this.rule.color-intensity {color-intensity},
+}
+
 data color-ansi {
 | Black
 | Red
@@ -7,11 +11,6 @@ data color-ansi {
 | Magenta
 | Cyan
 | White
-}
-
-data color-intensity {
-| Dull
-| Vivid
 }
 
 data color {

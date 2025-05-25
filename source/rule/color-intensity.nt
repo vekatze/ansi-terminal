@@ -1,0 +1,4 @@
+data color-intensity {
+| Dull
+| Vivid
+}
