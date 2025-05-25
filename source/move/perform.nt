@@ -5,12 +5,10 @@ import {
   core.text {_Text},
   this.move.make-ansi-kit {make-ansi-kit},
   this.rule.ansi-kit {ansi-kit},
-  this.rule.color {
+  this.rule.color {Color-256, Color-ANSI, Color-RGB},
+  this.rule.color-ansi {
     Black,
     Blue,
-    Color-256,
-    Color-ANSI,
-    Color-RGB,
     Cyan,
     Green,
     Magenta,
