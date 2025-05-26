@@ -1,11 +1,9 @@
 import {
-  core.file.descriptor {descriptor},
   core.text.buffer,
 }
 
 data ansi-kit {
 | _ANSI-Kit(
-    sink: descriptor,
     buffer: core.text.buffer.buffer,
   )
 }

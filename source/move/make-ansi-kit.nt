@@ -6,5 +6,5 @@ import {
 
 define make-ansi-kit(sink: descriptor, capacity: int): ansi-kit {
   let buffer = make-buffer(sink, capacity) in
-  _ANSI-Kit of {sink, buffer}
+  _ANSI-Kit of {buffer}
 }

@@ -1,0 +1,9 @@
+import {
+  core.text.buffer,
+  this.rule.ansi-kit {_ANSI-Kit, ansi-kit},
+}
+
+define flush(k: &ansi-kit): unit {
+  tie _ANSI-Kit of {buffer} = k in
+  core.text.buffer.flush(buffer)
+}
