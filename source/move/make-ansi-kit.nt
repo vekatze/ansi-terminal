@@ -8,3 +8,8 @@ define make-ansi-kit(sink: descriptor, capacity: int): ansi-kit {
   let buffer = make-buffer(sink, capacity) in
   _ANSI-Kit of {buffer}
 }
+
+define make-ansi-kit-unbuffered(sink: descriptor, capacity: int): ansi-kit {
+  let buffer = make-buffer(sink, capacity) in
+  _ANSI-Kit of {buffer}
+}

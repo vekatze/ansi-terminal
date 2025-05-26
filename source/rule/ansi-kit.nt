@@ -6,4 +6,5 @@ data ansi-kit {
 | _ANSI-Kit(
     buffer: core.text.buffer.buffer,
   )
+| _ANSI-Kit-Unbuffered
 }

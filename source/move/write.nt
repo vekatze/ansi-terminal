@@ -1,7 +1,7 @@
 import {
   core.int.show {show-int, show-uint},
   core.text.buffer,
-  this.rule.ansi-kit {_ANSI-Kit, ansi-kit},
+  this.rule.ansi-kit {_ANSI-Kit, _ANSI-Kit-Unbuffered, ansi-kit},
   this.rule.color {Color-256, Color-ANSI, Color-RGB},
   this.rule.color-ansi {
     Black,
@@ -23,30 +23,56 @@ import {
 }
 
 define write(k: &ansi-kit, t: &text): unit {
-  tie _ANSI-Kit of {buffer} = k in
-  core.text.buffer.write(buffer, t)
+  case k {
+  | _ANSI-Kit of {buffer} =>
+    core.text.buffer.write(buffer, t)
+  | _ANSI-Kit-Unbuffered =>
+    let _ = core.text.io.write(admit, admit) in
+    Unit
+  }
 }
 
 define writef(k: &ansi-kit, t: &text, args: list(text)): unit {
-  tie _ANSI-Kit of {buffer} = k in
-  core.text.buffer.writef(buffer, t, args)
+  case k {
+  | _ANSI-Kit of {buffer} =>
+    core.text.buffer.writef(buffer, t, args)
+  | _ANSI-Kit-Unbuffered =>
+    admit
+  }
+}
+
+define _write(k: &ansi-kit, t: &text): unit {
+  case k {
+  | _ANSI-Kit of {buffer} =>
+    core.text.buffer.write(buffer, t)
+  | _ANSI-Kit-Unbuffered =>
+    admit
+  }
+}
+
+define _writef(k: &ansi-kit, t: &text, args: list(text)): unit {
+  case k {
+  | _ANSI-Kit of {buffer} =>
+    core.text.buffer.writef(buffer, t, args)
+  | _ANSI-Kit-Unbuffered =>
+    admit
+  }
 }
 
 inline write-code(k: &ansi-kit, c: command): unit {
-  tie _ANSI-Kit of {buffer} = k in
   match c {
   | Set-Style(style) =>
     match style {
     | Normal =>
-      core.text.buffer.write(buffer, "\u{1b}[0m")
+      _write(k, "\u{1b}[0m")
     | Bold =>
-      core.text.buffer.write(buffer, "\u{1b}[1m")
+      _write(k, "\u{1b}[1m")
     | Faint =>
-      core.text.buffer.write(buffer, "\u{1b}[2m")
+      _write(k, "\u{1b}[2m")
     | Italic =>
-      core.text.buffer.write(buffer, "\u{1b}[3m")
+      _write(k, "\u{1b}[3m")
     | Underline =>
-      core.text.buffer.write(buffer, "\u{1b}[4m")
+      _write(k, "\u{1b}[4m")
     | Color(color-layer, color) =>
       match color-layer {
       | Foreground =>
@@ -56,46 +82,46 @@ inline write-code(k: &ansi-kit, c: command): unit {
           | Dull =>
             match color {
             | Black =>
-              core.text.buffer.write(buffer, "\u{1b}[30m")
+              _write(k, "\u{1b}[30m")
             | Red =>
-              core.text.buffer.write(buffer, "\u{1b}[31m")
+              _write(k, "\u{1b}[31m")
             | Green =>
-              core.text.buffer.write(buffer, "\u{1b}[32m")
+              _write(k, "\u{1b}[32m")
             | Yellow =>
-              core.text.buffer.write(buffer, "\u{1b}[33m")
+              _write(k, "\u{1b}[33m")
             | Blue =>
-              core.text.buffer.write(buffer, "\u{1b}[34m")
+              _write(k, "\u{1b}[34m")
             | Magenta =>
-              core.text.buffer.write(buffer, "\u{1b}[35m")
+              _write(k, "\u{1b}[35m")
             | Cyan =>
-              core.text.buffer.write(buffer, "\u{1b}[36m")
+              _write(k, "\u{1b}[36m")
             | White =>
-              core.text.buffer.write(buffer, "\u{1b}[37m")
+              _write(k, "\u{1b}[37m")
             }
           | Vivid =>
             match color {
             | Black =>
-              core.text.buffer.write(buffer, "\u{1b}[90m")
+              _write(k, "\u{1b}[90m")
             | Red =>
-              core.text.buffer.write(buffer, "\u{1b}[91m")
+              _write(k, "\u{1b}[91m")
             | Green =>
-              core.text.buffer.write(buffer, "\u{1b}[92m")
+              _write(k, "\u{1b}[92m")
             | Yellow =>
-              core.text.buffer.write(buffer, "\u{1b}[93m")
+              _write(k, "\u{1b}[93m")
             | Blue =>
-              core.text.buffer.write(buffer, "\u{1b}[94m")
+              _write(k, "\u{1b}[94m")
             | Magenta =>
-              core.text.buffer.write(buffer, "\u{1b}[95m")
+              _write(k, "\u{1b}[95m")
             | Cyan =>
-              core.text.buffer.write(buffer, "\u{1b}[96m")
+              _write(k, "\u{1b}[96m")
             | White =>
-              core.text.buffer.write(buffer, "\u{1b}[97m")
+              _write(k, "\u{1b}[97m")
             }
           }
         | Color-256(value) =>
-          core.text.buffer.writef(buffer, "\u{1b}[38;5;{}m]", [show-uint(zext-int8-int(value))])
+          _writef(k, "\u{1b}[38;5;{}m]", [show-uint(zext-int8-int(value))])
         | Color-RGB(r, g, b) =>
-          core.text.buffer.writef(buffer, "\u{1b}[38;2;{};{};{}m]", [
+          _writef(k, "\u{1b}[38;2;{};{};{}m]", [
             show-uint(zext-int8-int(r)),
             show-uint(zext-int8-int(g)),
             show-uint(zext-int8-int(b)),
@@ -108,46 +134,46 @@ inline write-code(k: &ansi-kit, c: command): unit {
           | Dull =>
             match color {
             | Black =>
-              core.text.buffer.write(buffer, "\u{1b}[40m")
+              _write(k, "\u{1b}[40m")
             | Red =>
-              core.text.buffer.write(buffer, "\u{1b}[41m")
+              _write(k, "\u{1b}[41m")
             | Green =>
-              core.text.buffer.write(buffer, "\u{1b}[42m")
+              _write(k, "\u{1b}[42m")
             | Yellow =>
-              core.text.buffer.write(buffer, "\u{1b}[43m")
+              _write(k, "\u{1b}[43m")
             | Blue =>
-              core.text.buffer.write(buffer, "\u{1b}[44m")
+              _write(k, "\u{1b}[44m")
             | Magenta =>
-              core.text.buffer.write(buffer, "\u{1b}[45m")
+              _write(k, "\u{1b}[45m")
             | Cyan =>
-              core.text.buffer.write(buffer, "\u{1b}[46m")
+              _write(k, "\u{1b}[46m")
             | White =>
-              core.text.buffer.write(buffer, "\u{1b}[47m")
+              _write(k, "\u{1b}[47m")
             }
           | Vivid =>
             match color {
             | Black =>
-              core.text.buffer.write(buffer, "\u{1b}[100m")
+              _write(k, "\u{1b}[100m")
             | Red =>
-              core.text.buffer.write(buffer, "\u{1b}[101m")
+              _write(k, "\u{1b}[101m")
             | Green =>
-              core.text.buffer.write(buffer, "\u{1b}[102m")
+              _write(k, "\u{1b}[102m")
             | Yellow =>
-              core.text.buffer.write(buffer, "\u{1b}[103m")
+              _write(k, "\u{1b}[103m")
             | Blue =>
-              core.text.buffer.write(buffer, "\u{1b}[104m")
+              _write(k, "\u{1b}[104m")
             | Magenta =>
-              core.text.buffer.write(buffer, "\u{1b}[105m")
+              _write(k, "\u{1b}[105m")
             | Cyan =>
-              core.text.buffer.write(buffer, "\u{1b}[106m")
+              _write(k, "\u{1b}[106m")
             | White =>
-              core.text.buffer.write(buffer, "\u{1b}[107m")
+              _write(k, "\u{1b}[107m")
             }
           }
         | Color-256(value) =>
-          core.text.buffer.writef(buffer, "\u{1b}[48;5;{}m]", [show-uint(zext-int8-int(value))])
+          _writef(k, "\u{1b}[48;5;{}m]", [show-uint(zext-int8-int(value))])
         | Color-RGB(r, g, b) =>
-          core.text.buffer.writef(buffer, "\u{1b}[48;2;{};{};{}m]", [
+          _writef(k, "\u{1b}[48;2;{};{};{}m]", [
             show-uint(zext-int8-int(r)),
             show-uint(zext-int8-int(g)),
             show-uint(zext-int8-int(b)),
@@ -158,41 +184,41 @@ inline write-code(k: &ansi-kit, c: command): unit {
   | Move-Cursor(movement) =>
     match movement {
     | Up(offset) =>
-      core.text.buffer.writef(buffer, "\u{1b}[{}A", [show-int(offset)])
+      _writef(k, "\u{1b}[{}A", [show-int(offset)])
     | Down(offset) =>
-      core.text.buffer.writef(buffer, "\u{1b}[{}B", [show-int(offset)])
+      _writef(k, "\u{1b}[{}B", [show-int(offset)])
     | Forward(offset) =>
-      core.text.buffer.writef(buffer, "\u{1b}[{}C", [show-int(offset)])
+      _writef(k, "\u{1b}[{}C", [show-int(offset)])
     | Backward(offset) =>
-      core.text.buffer.writef(buffer, "\u{1b}[{}D", [show-int(offset)])
+      _writef(k, "\u{1b}[{}D", [show-int(offset)])
     | Up-Start(offset) =>
-      core.text.buffer.writef(buffer, "\u{1b}[{}E", [show-int(offset)])
+      _writef(k, "\u{1b}[{}E", [show-int(offset)])
     | Down-Start(offset) =>
-      core.text.buffer.writef(buffer, "\u{1b}[{}F", [show-int(offset)])
+      _writef(k, "\u{1b}[{}F", [show-int(offset)])
     | To-Column(column) =>
-      core.text.buffer.writef(buffer, "\u{1b}[{}G", [show-int(column)])
+      _writef(k, "\u{1b}[{}G", [show-int(column)])
     | To(x, y) =>
-      core.text.buffer.writef(buffer, "\u{1b}[{};{}H", [show-int(x), show-int(y)])
+      _writef(k, "\u{1b}[{};{}H", [show-int(x), show-int(y)])
     }
   | Erase(space, span) =>
     match space {
     | Line =>
       match span {
       | From-Cursor =>
-        core.text.buffer.write(buffer, "\u{1b}[0K")
+        _write(k, "\u{1b}[0K")
       | To-Cursor =>
-        core.text.buffer.write(buffer, "\u{1b}[1K")
+        _write(k, "\u{1b}[1K")
       | Whole =>
-        core.text.buffer.write(buffer, "\u{1b}[2K")
+        _write(k, "\u{1b}[2K")
       }
     | Screen =>
       match span {
       | From-Cursor =>
-        core.text.buffer.write(buffer, "\u{1b}[0J")
+        _write(k, "\u{1b}[0J")
       | To-Cursor =>
-        core.text.buffer.write(buffer, "\u{1b}[1J")
+        _write(k, "\u{1b}[1J")
       | Whole =>
-        core.text.buffer.write(buffer, "\u{1b}[2J")
+        _write(k, "\u{1b}[2J")
       }
     }
   }
