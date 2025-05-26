@@ -1,8 +1,10 @@
 import {
   core.file.descriptor {descriptor},
+  core.text.buffer {make-buffer},
   this.rule.ansi-kit {_ANSI-Kit, ansi-kit},
 }
 
-define make-ansi-kit(sink: descriptor): ansi-kit {
-  _ANSI-Kit of {sink}
+define make-ansi-kit(sink: descriptor, capacity: int): ansi-kit {
+  let buffer = make-buffer(sink, capacity) in
+  _ANSI-Kit of {sink, buffer}
 }

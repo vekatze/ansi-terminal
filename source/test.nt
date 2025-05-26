@@ -1,7 +1,7 @@
 import {
   core.file.descriptor {stdout},
   this.move.make-ansi-kit {make-ansi-kit},
-  this.move.perform {perform},
+  this.move.perform {flush, write, write-code},
   this.rule.ansi-kit {ansi-kit},
   this.rule.color {Color-ANSI},
   this.rule.color-ansi {
@@ -24,119 +24,120 @@ import {
 }
 
 define _test-print(k: &ansi-kit): unit {
-  print("XX");
-  perform(k, Set-Style(Normal));
-  print(" ")
+  write(k, "XX");
+  write-code(k, Set-Style(Normal));
+  write(k, " ")
 }
 
 define _test-color-foreground-dull(k: &ansi-kit): unit {
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Black))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Black))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Red))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Red))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Green))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Green))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Yellow))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Yellow))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Blue))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Blue))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Magenta))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Magenta))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Cyan))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Dull, Cyan))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Dull, White))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Dull, White))));
   _test-print(k)
 }
 
 define _test-color-background-dull(k: &ansi-kit): unit {
-  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Black))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Dull, Black))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Red))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Dull, Red))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Green))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Dull, Green))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Yellow))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Dull, Yellow))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Blue))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Dull, Blue))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Magenta))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Dull, Magenta))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, Cyan))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Dull, Cyan))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Dull, White))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Dull, White))));
   _test-print(k)
 }
 
 define _test-color-foreground-vivid(k: &ansi-kit): unit {
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Black))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Black))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Red))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Red))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Green))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Green))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Yellow))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Yellow))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Blue))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Blue))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Magenta))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Magenta))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Cyan))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, Cyan))));
   _test-print(k);
-  perform(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, White))));
+  write-code(k, Set-Style(Color(Foreground, Color-ANSI(Vivid, White))));
   _test-print(k)
 }
 
 define _test-color-background-vivid(k: &ansi-kit): unit {
-  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Black))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Vivid, Black))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Red))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Vivid, Red))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Green))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Vivid, Green))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Yellow))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Vivid, Yellow))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Blue))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Vivid, Blue))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Magenta))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Vivid, Magenta))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, Cyan))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Vivid, Cyan))));
   _test-print(k);
-  perform(k, Set-Style(Color(Background, Color-ANSI(Vivid, White))));
+  write-code(k, Set-Style(Color(Background, Color-ANSI(Vivid, White))));
   _test-print(k)
 }
 
 define zen(): unit {
-  pin k = make-ansi-kit of {sink = stdout} in
-  perform(k, Set-Style(Normal));
+  pin k = make-ansi-kit of {sink = stdout, capacity = 4096} in
+  write-code(k, Set-Style(Normal));
   _test-print(k);
-  perform(k, Set-Style(Bold));
+  write-code(k, Set-Style(Bold));
   _test-print(k);
-  perform(k, Set-Style(Faint));
+  write-code(k, Set-Style(Faint));
   _test-print(k);
-  perform(k, Set-Style(Italic));
+  write-code(k, Set-Style(Italic));
   _test-print(k);
-  perform(k, Set-Style(Underline));
+  write-code(k, Set-Style(Underline));
   _test-print(k);
-  print("\n");
+  write(k, "\n");
   _test-color-foreground-dull(k);
-  print("\n");
+  write(k, "\n");
   _test-color-background-dull(k);
-  print("\n");
+  write(k, "\n");
   _test-color-foreground-vivid(k);
-  print("\n");
+  write(k, "\n");
   _test-color-background-vivid(k);
-  print("\n");
-  print("123456789");
-  perform(k, Erase(Line, Whole));
-  perform(k, Move-Cursor(To-Column(0)));
-  print("123456789");
-  perform(k, Move-Cursor(Backward(5)));
-  perform(k, Erase(Line, From-Cursor));
-  print("\n");
-  print("123456789");
-  perform(k, Move-Cursor(Backward(5)));
-  perform(k, Erase(Line, To-Cursor));
-  print("\n");
+  write(k, "\n");
+  write(k, "123456789");
+  write-code(k, Erase(Line, Whole));
+  write-code(k, Move-Cursor(To-Column(0)));
+  write(k, "123456789");
+  write-code(k, Move-Cursor(Backward(5)));
+  write-code(k, Erase(Line, From-Cursor));
+  write(k, "\n");
+  write(k, "123456789");
+  write-code(k, Move-Cursor(Backward(5)));
+  write-code(k, Erase(Line, To-Cursor));
+  write(k, "\n");
+  flush(k);
   Unit
 }
 
