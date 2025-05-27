@@ -30,6 +30,11 @@ define _write-space(k: &ansi-kit): unit {
   write-code(k, Set-Style(Normal))
 }
 
+define _write-X(k: &ansi-kit): unit {
+  write(k, "X");
+  write-code(k, Set-Style(Normal))
+}
+
 define _write-XX(k: &ansi-kit): unit {
   write(k, "XX");
   write-code(k, Set-Style(Normal));
@@ -154,6 +159,36 @@ define _test-rgb(k: &ansi-kit): unit {
   _write-space(k);
   write-code(k, Set-Style(Color(Background, Color-RGB(128, 128, 128))));
   _write-space(k);
+  write(k, "\n");
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(255, 0, 0))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(0, 255, 0))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(0, 0, 255))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(255, 255, 0))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(255, 0, 255))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(0, 255, 255))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(255, 255, 255))));
+  _write-X(k);
+  write(k, "\n");
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(128, 0, 0))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(0, 128, 0))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(0, 0, 128))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(128, 128, 0))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(128, 0, 128))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(0, 128, 128))));
+  _write-X(k);
+  write-code(k, Set-Style(Color(Foreground, Color-RGB(128, 128, 128))));
+  _write-X(k);
   write(k, "\n");
   flush(k);
   Unit
