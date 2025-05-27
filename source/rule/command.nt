@@ -9,8 +9,4 @@ data command {
 | Set-Style(style)
 | Move-Cursor(cursor-movement)
 | Erase(space, span)
-  // | Set-Title(&text)
-  // | Set-Hyperlink(&text, &text)
-  // | Copy-To-Clipboard(&text)
-  // | Perform-Raw-Command(&text)
 }
