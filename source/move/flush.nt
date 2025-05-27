@@ -7,7 +7,7 @@ define flush(k: &ansi-kit): unit {
   case k {
   | _ANSI-Kit of {buffer} =>
     core.text.buffer.flush(buffer)
-  | _ANSI-Kit-Unbuffered =>
+  | _ANSI-Kit-Unbuffered of {} =>
     Unit
   }
 }

@@ -1,7 +1,7 @@
 import {
   core.file.descriptor {descriptor},
   core.text.buffer {make-buffer},
-  this.rule.ansi-kit {_ANSI-Kit, ansi-kit},
+  this.rule.ansi-kit {_ANSI-Kit, _ANSI-Kit-Unbuffered, ansi-kit},
 }
 
 define make-ansi-kit(sink: descriptor, capacity: int): ansi-kit {
@@ -9,7 +9,6 @@ define make-ansi-kit(sink: descriptor, capacity: int): ansi-kit {
   _ANSI-Kit of {buffer}
 }
 
-define make-ansi-kit-unbuffered(sink: descriptor, capacity: int): ansi-kit {
-  let buffer = make-buffer(sink, capacity) in
-  _ANSI-Kit of {buffer}
+define make-ansi-kit-unbuffered(sink: descriptor): ansi-kit {
+  _ANSI-Kit-Unbuffered of {sink}
 }

@@ -1,4 +1,5 @@
 import {
+  core.file.descriptor {descriptor},
   core.text.buffer,
 }
 
@@ -6,5 +7,7 @@ data ansi-kit {
 | _ANSI-Kit(
     buffer: core.text.buffer.buffer,
   )
-| _ANSI-Kit-Unbuffered
+| _ANSI-Kit-Unbuffered(
+    sink: descriptor,
+  )
 }

@@ -1,7 +1,8 @@
 import {
+  core.external {sleep},
   core.file.descriptor {stdout},
   this.move.flush {flush},
-  this.move.make-ansi-kit {make-ansi-kit},
+  this.move.make-ansi-kit {make-ansi-kit, make-ansi-kit-unbuffered},
   this.move.write {write, write-code, writef},
   this.rule.ansi-kit {ansi-kit},
   this.rule.color {Color-ANSI},
@@ -106,8 +107,7 @@ define _test-color-background-vivid(k: &ansi-kit): unit {
   _write-XX(k)
 }
 
-define zen(): unit {
-  pin k = make-ansi-kit of {sink = stdout, capacity = 100} in
+define _test-color(k: &ansi-kit): unit {
   write-code(k, Set-Style(Normal));
   _write-XX(k);
   write-code(k, Set-Style(Bold));
@@ -128,19 +128,33 @@ define zen(): unit {
   _test-color-background-vivid(k);
   write(k, "\n");
   write(k, "123456789");
+  flush(k);
+  sleep(1);
   write-code(k, Erase(Line, Whole));
   write-code(k, Move-Cursor(To-Column(0)));
   write(k, "123456789");
   write-code(k, Move-Cursor(Backward(5)));
+  flush(k);
+  sleep(1);
   write-code(k, Erase(Line, From-Cursor));
   write(k, "\n");
   write(k, "123456789");
   write-code(k, Move-Cursor(Backward(5)));
-  write-code(k, Erase(Line, To-Cursor));
-  write(k, "\n");
-  writef(k, "hello, {}!\n", [*"some-name"]);
   flush(k);
-  Unit
+  sleep(1);
+  write-code(k, Erase(Line, To-Cursor));
+  flush(k);
+  sleep(1);
+  write(k, "\n");
+  writef(k, "hello, {}!\n", [*"world"]);
+  flush(k)
+}
+
+define zen(): unit {
+  pin k1 = make-ansi-kit of {sink = stdout, capacity = 100} in
+  pin k2 = make-ansi-kit-unbuffered of {sink = stdout} in
+  _test-color(k1);
+  _test-color(k2)
 }
 
 define main(): unit {
