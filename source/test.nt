@@ -233,6 +233,25 @@ define _test-color(k: &ansi-kit): unit {
   flush(k)
 }
 
+define some-func(): unit {
+  pin k = make-ansi-kit of {sink = stdout, capacity = 100} in
+  // prints "error: " in bold red
+  write-code(k, Set-Style(Color(Foreground, Color-16(Vivid, Red))));
+  write-code(k, Set-Style(Bold));
+  write(k, "error: ");
+  write-code(k, Set-Style(Normal));
+  // prints "Lorem.." in plain text
+  write(k, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n");
+  // prints "hint: " in bold blue
+  write-code(k, Set-Style(Color(Foreground, Color-16(Vivid, Blue))));
+  write-code(k, Set-Style(Bold));
+  write(k, "hint: ");
+  // prints "くらきより.." in plain text
+  write-code(k, Set-Style(Normal));
+  write(k, "くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき\n");
+  flush(k)
+}
+
 define zen(): unit {
   pin k1 = make-ansi-kit of {sink = stdout, capacity = 100} in
   pin k2 = make-ansi-kit-unbuffered of {sink = stdout} in
@@ -241,7 +260,8 @@ define zen(): unit {
   _test-rgb(k1);
   _test-rgb(k2);
   _test-color(k1);
-  _test-color(k2)
+  _test-color(k2);
+  some-func()
 }
 
 define main(): unit {
