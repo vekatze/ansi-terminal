@@ -4,7 +4,7 @@ import {
 }
 
 data color {
-| Color-ANSI(color-intensity, color-ansi)
+| Color-16(color-intensity, color-ansi)
 | Color-256(int8)
 | Color-RGB(int8, int8, int8)
 }

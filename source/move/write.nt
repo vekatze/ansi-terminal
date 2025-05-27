@@ -2,7 +2,7 @@ import {
   core.int.show {show-int, show-uint},
   core.text.buffer,
   this.rule.ansi-kit {_ANSI-Kit, _ANSI-Kit-Unbuffered, ansi-kit},
-  this.rule.color {Color-256, Color-ANSI, Color-RGB},
+  this.rule.color {Color-16, Color-256, Color-RGB},
   this.rule.color-ansi {
     Black,
     Blue,
@@ -59,7 +59,7 @@ inline write-code(k: &ansi-kit, c: command): unit {
       match color-layer {
       | Foreground =>
         match color {
-        | Color-ANSI(color-intensity, color) =>
+        | Color-16(color-intensity, color) =>
           match color-intensity {
           | Dull =>
             match color {
@@ -101,9 +101,9 @@ inline write-code(k: &ansi-kit, c: command): unit {
             }
           }
         | Color-256(value) =>
-          writef(k, "\u{1b}[38;5;{}m]", [show-uint(zext-int8-int(value))])
+          writef(k, "\u{1b}[38;5;{}m", [show-uint(zext-int8-int(value))])
         | Color-RGB(r, g, b) =>
-          writef(k, "\u{1b}[38;2;{};{};{}m]", [
+          writef(k, "\u{1b}[38;2;{};{};{}m", [
             show-uint(zext-int8-int(r)),
             show-uint(zext-int8-int(g)),
             show-uint(zext-int8-int(b)),
@@ -111,7 +111,7 @@ inline write-code(k: &ansi-kit, c: command): unit {
         }
       | Background =>
         match color {
-        | Color-ANSI(color-intensity, color) =>
+        | Color-16(color-intensity, color) =>
           match color-intensity {
           | Dull =>
             match color {
@@ -153,9 +153,9 @@ inline write-code(k: &ansi-kit, c: command): unit {
             }
           }
         | Color-256(value) =>
-          writef(k, "\u{1b}[48;5;{}m]", [show-uint(zext-int8-int(value))])
+          writef(k, "\u{1b}[48;5;{}m", [show-uint(zext-int8-int(value))])
         | Color-RGB(r, g, b) =>
-          writef(k, "\u{1b}[48;2;{};{};{}m]", [
+          writef(k, "\u{1b}[48;2;{};{};{}m", [
             show-uint(zext-int8-int(r)),
             show-uint(zext-int8-int(g)),
             show-uint(zext-int8-int(b)),
