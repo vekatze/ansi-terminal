@@ -100,7 +100,7 @@ data span {
 
 ```neut
 define some-func(): unit {
-  pin k = make-ansi-kit of {sink = stdout, capacity = 100} in
+  pin k = make-ansi-kit of {sink = stdout, capacity = 100};
   // prints "error: " in bold red
   write-code(k, Set-Style(Color(Foreground, Color-16(Vivid, Red))));
   write-code(k, Set-Style(Bold));

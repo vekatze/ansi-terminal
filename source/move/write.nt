@@ -1,5 +1,6 @@
 import {
-  core.int.show {show-int, show-uint},
+  core.int.buffer,
+  core.int.io,
   core.text.buffer,
   this.rule.ansi-kit {_ANSI-Kit, _ANSI-Kit-Unbuffered, ansi-kit},
   this.rule.color {Color-16, Color-256, Color-RGB},
@@ -27,17 +28,18 @@ define write(k: &ansi-kit, t: &text): unit {
   | _ANSI-Kit of {buffer} =>
     core.text.buffer.write(buffer, t)
   | _ANSI-Kit-Unbuffered of {sink} =>
-    let _ = core.text.io.write(*sink, t) in
+    let _ = core.text.io.write(*sink, t);
     Unit
   }
 }
 
-define writef(k: &ansi-kit, t: &text, args: list(text)): unit {
+define write-int(k: &ansi-kit, x: int): unit {
   case k {
   | _ANSI-Kit of {buffer} =>
-    core.text.buffer.writef(buffer, t, args)
+    core.int.buffer.write-int(buffer, x);
   | _ANSI-Kit-Unbuffered of {sink} =>
-    core.text.io.writef(*sink, t, args)
+    let _ = core.int.io.write-int(*sink, x);
+    Unit
   }
 }
 
@@ -101,13 +103,17 @@ inline write-code(k: &ansi-kit, c: command): unit {
             }
           }
         | Color-256(value) =>
-          writef(k, "\u{1b}[38;5;{}m", [show-uint(zext-int8-int(value))])
+          write(k, "\u{1b}[38;5;");
+          write-int(k, zext-int8-int(value));
+          write(k, "m");
         | Color-RGB(r, g, b) =>
-          writef(k, "\u{1b}[38;2;{};{};{}m", [
-            show-uint(zext-int8-int(r)),
-            show-uint(zext-int8-int(g)),
-            show-uint(zext-int8-int(b)),
-          ])
+          write(k, "\u{1b}[38;2;");
+          write-int(k, zext-int8-int(r));
+          write(k, ";");
+          write-int(k, zext-int8-int(g));
+          write(k, ";");
+          write-int(k, zext-int8-int(b));
+          write(k, "m");
         }
       | Background =>
         match color {
@@ -153,34 +159,56 @@ inline write-code(k: &ansi-kit, c: command): unit {
             }
           }
         | Color-256(value) =>
-          writef(k, "\u{1b}[48;5;{}m", [show-uint(zext-int8-int(value))])
+          write(k, "\u{1b}[48;5;");
+          write-int(k, zext-int8-int(value));
+          write(k, "m");
         | Color-RGB(r, g, b) =>
-          writef(k, "\u{1b}[48;2;{};{};{}m", [
-            show-uint(zext-int8-int(r)),
-            show-uint(zext-int8-int(g)),
-            show-uint(zext-int8-int(b)),
-          ])
+          write(k, "\u{1b}[48;2;");
+          write-int(k, zext-int8-int(r));
+          write(k, ";");
+          write-int(k, zext-int8-int(g));
+          write(k, ";");
+          write-int(k, zext-int8-int(b));
+          write(k, "m");
         }
       }
     }
   | Move-Cursor(movement) =>
     match movement {
     | Up(offset) =>
-      writef(k, "\u{1b}[{}A", [show-int(offset)])
+      write(k, "\u{1b}[");
+      write-int(k, offset);
+      write(k, "A");
     | Down(offset) =>
-      writef(k, "\u{1b}[{}B", [show-int(offset)])
+      write(k, "\u{1b}[");
+      write-int(k, offset);
+      write(k, "B");
     | Forward(offset) =>
-      writef(k, "\u{1b}[{}C", [show-int(offset)])
+      write(k, "\u{1b}[");
+      write-int(k, offset);
+      write(k, "C");
     | Backward(offset) =>
-      writef(k, "\u{1b}[{}D", [show-int(offset)])
+      write(k, "\u{1b}[");
+      write-int(k, offset);
+      write(k, "D");
     | Up-Start(offset) =>
-      writef(k, "\u{1b}[{}E", [show-int(offset)])
+      write(k, "\u{1b}[");
+      write-int(k, offset);
+      write(k, "E");
     | Down-Start(offset) =>
-      writef(k, "\u{1b}[{}F", [show-int(offset)])
+      write(k, "\u{1b}[");
+      write-int(k, offset);
+      write(k, "F");
     | To-Column(column) =>
-      writef(k, "\u{1b}[{}G", [show-int(column)])
+      write(k, "\u{1b}[");
+      write-int(k, column);
+      write(k, "G");
     | To(x, y) =>
-      writef(k, "\u{1b}[{};{}H", [show-int(x), show-int(y)])
+      write(k, "\u{1b}[");
+      write-int(k, x);
+      write(k, ";");
+      write-int(k, y);
+      write(k, "H");
     }
   | Erase(space, span) =>
     match space {

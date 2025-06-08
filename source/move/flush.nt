@@ -1,12 +1,12 @@
 import {
-  core.text.buffer,
+  core.buffer,
   this.rule.ansi-kit {_ANSI-Kit, _ANSI-Kit-Unbuffered, ansi-kit},
 }
 
 define flush(k: &ansi-kit): unit {
   case k {
   | _ANSI-Kit of {buffer} =>
-    core.text.buffer.flush(buffer)
+    core.buffer.flush(buffer)
   | _ANSI-Kit-Unbuffered of {} =>
     Unit
   }

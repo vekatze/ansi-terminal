@@ -1,11 +1,11 @@
 import {
+  core.buffer,
   core.file.descriptor {descriptor},
-  core.text.buffer,
 }
 
 data ansi-kit {
 | _ANSI-Kit(
-    buffer: core.text.buffer.buffer,
+    buffer: core.buffer.buffer,
   )
 | _ANSI-Kit-Unbuffered(
     sink: descriptor,

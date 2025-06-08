@@ -1,11 +1,11 @@
 import {
+  core.buffer {make-buffer},
   core.file.descriptor {descriptor},
-  core.text.buffer {make-buffer},
   this.rule.ansi-kit {_ANSI-Kit, _ANSI-Kit-Unbuffered, ansi-kit},
 }
 
 define make-ansi-kit(sink: descriptor, capacity: int): ansi-kit {
-  let buffer = make-buffer(sink, capacity) in
+  let buffer = make-buffer(sink, capacity);
   _ANSI-Kit of {buffer}
 }
 

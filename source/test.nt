@@ -3,7 +3,7 @@ import {
   core.file.descriptor {stdout},
   this.move.flush {flush},
   this.move.make-ansi-kit {make-ansi-kit, make-ansi-kit-unbuffered},
-  this.move.write {write, write-code, writef},
+  this.move.write {write, write-code},
   this.rule.ansi-kit {ansi-kit},
   this.rule.color {Color-16, Color-256, Color-RGB},
   this.rule.color-ansi {
@@ -126,7 +126,7 @@ define _test-256(k: &ansi-kit): unit {
     }
   });
   write(k, "\n");
-  flush(k)
+  flush(k);
 }
 
 define _test-rgb(k: &ansi-kit): unit {
@@ -191,7 +191,6 @@ define _test-rgb(k: &ansi-kit): unit {
   _write-X(k);
   write(k, "\n");
   flush(k);
-  Unit
 }
 
 define _test-color(k: &ansi-kit): unit {
@@ -229,12 +228,12 @@ define _test-color(k: &ansi-kit): unit {
   write-code(k, Erase(Line, To-Cursor));
   flush(k);
   write(k, "\n");
-  writef(k, "hello, {}!\n", [*"world"]);
+  write(k, "hello, world!\n");
   flush(k)
 }
 
 define some-func(): unit {
-  pin k = make-ansi-kit of {sink = stdout, capacity = 100} in
+  pin k = make-ansi-kit of {sink := stdout, capacity := 100};
   // prints "error: " in bold red
   write-code(k, Set-Style(Color(Foreground, Color-16(Vivid, Red))));
   write-code(k, Set-Style(Bold));
@@ -249,21 +248,21 @@ define some-func(): unit {
   // prints "くらきより.." in plain text
   write-code(k, Set-Style(Normal));
   write(k, "くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき\n");
-  flush(k)
+  flush(k);
 }
 
 define zen(): unit {
-  pin k1 = make-ansi-kit of {sink = stdout, capacity = 100} in
-  pin k2 = make-ansi-kit-unbuffered of {sink = stdout} in
+  pin k1 = make-ansi-kit of {sink := stdout, capacity := 100};
+  pin k2 = make-ansi-kit-unbuffered of {sink := stdout};
   _test-256(k1);
   _test-256(k2);
   _test-rgb(k1);
   _test-rgb(k2);
   _test-color(k1);
   _test-color(k2);
-  some-func()
+  some-func();
 }
 
 define main(): unit {
-  zen()
+  zen();
 }
