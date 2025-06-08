@@ -22,9 +22,6 @@ define make-ansi-kit-unbuffered(sink: descriptor): ansi-kit
 // writes text
 define write(k: &ansi-kit, t: &text): unit
 
-// "printf" version of `write`
-define writef(k: &ansi-kit, t: &text, args: list(text)): unit
-
 // writes the ANSI escape code of a command `c` (see below)
 inline write-code(k: &ansi-kit, c: command): unit
 
