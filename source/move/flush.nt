@@ -1,13 +1,16 @@
 import {
   core.buffer,
+  core.system {system},
   this.rule.ansi-kit {_ANSI-Kit, _ANSI-Kit-Unbuffered, ansi-kit},
 }
 
-define flush(k: &ansi-kit): unit {
+define flush<r := rho>(k: &ansi-kit): system(unit) {
   case k {
   | _ANSI-Kit of {buffer} =>
+    try _ = r;
     core.buffer.flush(buffer)
   | _ANSI-Kit-Unbuffered of {} =>
-    Unit
+    try _ = r;
+    Right(Unit)
   }
 }

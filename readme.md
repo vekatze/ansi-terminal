@@ -20,13 +20,16 @@ define make-ansi-kit(sink: descriptor, capacity: int): ansi-kit
 define make-ansi-kit-unbuffered(sink: descriptor): ansi-kit
 
 // writes text
-define write(k: &ansi-kit, t: &text): unit
+define write<r := rho>(k: &ansi-kit, t: &text): system(unit)
+
+// writes text + "\n"
+define write-line<r := rho>(k: &ansi-kit, t: &text): system(unit)
 
 // writes the ANSI escape code of a command `c` (see below)
-inline write-code(k: &ansi-kit, c: command): unit
+inline write-code<r := rho>(k: &ansi-kit, c: command): system(unit)
 
 // flush the buffer of `k` (if any)
-define flush(k: &ansi-kit): unit
+define flush<r := rho>(k: &ansi-kit): system(unit)
 
 data command {
 | Set-Style(style)
@@ -96,22 +99,22 @@ data span {
 ## Example
 
 ```neut
-define some-func(): unit {
-  pin k = make-ansi-kit of {sink = stdout, capacity = 100};
+define some-func(): system(unit) {
+  pin k = make-ansi-kit of {sink := stdout, capacity := 100};
   // prints "error: " in bold red
-  write-code(k, Set-Style(Color(Foreground, Color-16(Vivid, Red))));
-  write-code(k, Set-Style(Bold));
-  write(k, "error: ");
-  write-code(k, Set-Style(Normal));
+  try _ = write-code(k, Set-Style(Color(Foreground, Color-16(Vivid, Red))));
+  try _ = write-code(k, Set-Style(Bold));
+  try _ = write(k, "error: ");
+  try _ = write-code(k, Set-Style(Normal));
   // prints "Lorem.." in plain text
-  write(k, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n");
+  try _ = write(k, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n");
   // prints "hint: " in bold blue
-  write-code(k, Set-Style(Color(Foreground, Color-16(Vivid, Blue))));
-  write-code(k, Set-Style(Bold));
-  write(k, "hint: ");
+  try _ = write-code(k, Set-Style(Color(Foreground, Color-16(Vivid, Blue))));
+  try _ = write-code(k, Set-Style(Bold));
+  try _ = write(k, "hint: ");
   // prints "くらきより.." in plain text
-  write-code(k, Set-Style(Normal));
-  write(k, "くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき\n");
+  try _ = write-code(k, Set-Style(Normal));
+  try _ = write(k, "くらきよりくらきみちにぞいりぬべきはるかにてらせやまのはのつき\n");
   flush(k)
 }
 ```

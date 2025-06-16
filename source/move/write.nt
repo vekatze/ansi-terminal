@@ -1,6 +1,7 @@
 import {
   core.int.buffer,
   core.int.io,
+  core.system {system},
   core.text.buffer,
   this.rule.ansi-kit {_ANSI-Kit, _ANSI-Kit-Unbuffered, ansi-kit},
   this.rule.color {Color-16, Color-256, Color-RGB},
@@ -23,27 +24,41 @@ import {
   this.rule.style {Bold, Color, Faint, Italic, Normal, Underline},
 }
 
-define write(k: &ansi-kit, t: &text): unit {
+define write<r := rho>(k: &ansi-kit, t: &text): system(unit) {
+  try _ = r;
   case k {
   | _ANSI-Kit of {buffer} =>
     core.text.buffer.write(buffer, t)
   | _ANSI-Kit-Unbuffered of {sink} =>
     let _ = core.text.io.write(*sink, t);
-    Unit
+    Right(Unit)
   }
 }
 
-define write-int(k: &ansi-kit, x: int): unit {
+define write-line<r := rho>(k: &ansi-kit, t: &text): system(unit) {
+  try _ = r;
   case k {
   | _ANSI-Kit of {buffer} =>
-    core.int.buffer.write-int(buffer, x);
+    core.text.buffer.write-line(buffer, t)
   | _ANSI-Kit-Unbuffered of {sink} =>
-    let _ = core.int.io.write-int(*sink, x);
-    Unit
+    let _ = core.text.io.write(*sink, t);
+    Right(Unit)
   }
 }
 
-inline write-code(k: &ansi-kit, c: command): unit {
+define write-int<r := rho>(k: &ansi-kit, x: int): system(unit) {
+  try _ = r;
+  case k {
+  | _ANSI-Kit of {buffer} =>
+    core.int.buffer.write-int(buffer, x)
+  | _ANSI-Kit-Unbuffered of {sink} =>
+    let _ = core.int.io.write-int(*sink, x);
+    Right(Unit)
+  }
+}
+
+inline write-code<r := rho>(k: &ansi-kit, c: command): system(unit) {
+  try _ = r;
   match c {
   | Set-Style(style) =>
     match style {
@@ -103,17 +118,17 @@ inline write-code(k: &ansi-kit, c: command): unit {
             }
           }
         | Color-256(value) =>
-          write(k, "\u{1b}[38;5;");
-          write-int(k, zext-int8-int(value));
-          write(k, "m");
+          try _ = write(k, "\u{1b}[38;5;");
+          try _ = write-int(k, zext-int8-int(value));
+          write(k, "m")
         | Color-RGB(r, g, b) =>
-          write(k, "\u{1b}[38;2;");
-          write-int(k, zext-int8-int(r));
-          write(k, ";");
-          write-int(k, zext-int8-int(g));
-          write(k, ";");
-          write-int(k, zext-int8-int(b));
-          write(k, "m");
+          try _ = write(k, "\u{1b}[38;2;");
+          try _ = write-int(k, zext-int8-int(r));
+          try _ = write(k, ";");
+          try _ = write-int(k, zext-int8-int(g));
+          try _ = write(k, ";");
+          try _ = write-int(k, zext-int8-int(b));
+          write(k, "m")
         }
       | Background =>
         match color {
@@ -159,56 +174,56 @@ inline write-code(k: &ansi-kit, c: command): unit {
             }
           }
         | Color-256(value) =>
-          write(k, "\u{1b}[48;5;");
-          write-int(k, zext-int8-int(value));
-          write(k, "m");
+          try _ = write(k, "\u{1b}[48;5;");
+          try _ = write-int(k, zext-int8-int(value));
+          write(k, "m")
         | Color-RGB(r, g, b) =>
-          write(k, "\u{1b}[48;2;");
-          write-int(k, zext-int8-int(r));
-          write(k, ";");
-          write-int(k, zext-int8-int(g));
-          write(k, ";");
-          write-int(k, zext-int8-int(b));
-          write(k, "m");
+          try _ = write(k, "\u{1b}[48;2;");
+          try _ = write-int(k, zext-int8-int(r));
+          try _ = write(k, ";");
+          try _ = write-int(k, zext-int8-int(g));
+          try _ = write(k, ";");
+          try _ = write-int(k, zext-int8-int(b));
+          write(k, "m")
         }
       }
     }
   | Move-Cursor(movement) =>
     match movement {
     | Up(offset) =>
-      write(k, "\u{1b}[");
-      write-int(k, offset);
-      write(k, "A");
+      try _ = write(k, "\u{1b}[");
+      try _ = write-int(k, offset);
+      write(k, "A")
     | Down(offset) =>
-      write(k, "\u{1b}[");
-      write-int(k, offset);
-      write(k, "B");
+      try _ = write(k, "\u{1b}[");
+      try _ = write-int(k, offset);
+      write(k, "B")
     | Forward(offset) =>
-      write(k, "\u{1b}[");
-      write-int(k, offset);
-      write(k, "C");
+      try _ = write(k, "\u{1b}[");
+      try _ = write-int(k, offset);
+      write(k, "C")
     | Backward(offset) =>
-      write(k, "\u{1b}[");
-      write-int(k, offset);
-      write(k, "D");
+      try _ = write(k, "\u{1b}[");
+      try _ = write-int(k, offset);
+      write(k, "D")
     | Up-Start(offset) =>
-      write(k, "\u{1b}[");
-      write-int(k, offset);
-      write(k, "E");
+      try _ = write(k, "\u{1b}[");
+      try _ = write-int(k, offset);
+      write(k, "E")
     | Down-Start(offset) =>
-      write(k, "\u{1b}[");
-      write-int(k, offset);
-      write(k, "F");
+      try _ = write(k, "\u{1b}[");
+      try _ = write-int(k, offset);
+      write(k, "F")
     | To-Column(column) =>
-      write(k, "\u{1b}[");
-      write-int(k, column);
-      write(k, "G");
+      try _ = write(k, "\u{1b}[");
+      try _ = write-int(k, column);
+      write(k, "G")
     | To(x, y) =>
-      write(k, "\u{1b}[");
-      write-int(k, x);
-      write(k, ";");
-      write-int(k, y);
-      write(k, "H");
+      try _ = write(k, "\u{1b}[");
+      try _ = write-int(k, x);
+      try _ = write(k, ";");
+      try _ = write-int(k, y);
+      write(k, "H")
     }
   | Erase(space, span) =>
     match space {
