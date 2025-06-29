@@ -7,7 +7,7 @@ This is a library for the [Neut](https://vekatze.github.io/neut/) programming la
 ## Installation
 
 ```sh
-neut get ansi https://github.com/vekatze/ansi-terminal/raw/main/archive/0-5-5.tar.zst
+neut get ansi https://github.com/vekatze/ansi-terminal/raw/main/archive/0-5-6.tar.zst
 ```
 
 ## Types
